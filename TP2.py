@@ -144,12 +144,10 @@ def update_convention(old_convention_dict):
                 
             
 
-    print("000", new_convention_dict)
+
 
 
         
-         
-
     # Fin du code
 
     return new_convention_dict
@@ -179,6 +177,10 @@ def fetch_candidates(patients_dict):
 
     # TODO : Écrire votre code ici
 
+    for participant_id in patients_dict.keys():
+        for key, value in patients_dict[participant_id].items():
+            if patients_dict[participant_id][key] == "F" and 25 <= int(patients_dict[participant_id]["age"]) <= 32 and int(patients_dict[participant_id]["height"]) > 170:
+                candidates_list.append(participant_id)
 
     # Fin du code
 
@@ -210,6 +212,119 @@ def fetch_statistics(patients_dict):
     metrics = {'M':{}, 'F':{}}
 
     # TODO : Écrire votre code ici
+
+    metrics = {
+        'M': {'age': {'mean': 0, 'std': 0}, 'height': {'mean': 0, 'std': 0}, 'weight': {'mean': 0, 'std': 0}},
+        'F': {'age': {'mean': 0, 'std': 0}, 'height': {'mean': 0, 'std': 0}, 'weight': {'mean': 0, 'std': 0}}
+    }
+
+    countfemale = {"age": 0, "height": 0, "weight": 0}
+    countmale = {"age": 0, "height": 0, "weight": 0}
+
+    for participant_id, base_value in patients_dict.items():
+        sex = base_value["sex"]
+        if sex == "F":
+            if base_value["age"] != "n/a":
+                countfemale["age"] += 1
+                metrics["F"]["age"]["mean"] += int(base_value["age"])
+            if base_value["height"] != "n/a":
+                countfemale["height"] += 1
+                metrics["F"]["height"]["mean"] += float(base_value["height"])
+            if base_value["weight"] != "n/a":
+                countfemale["weight"] += 1
+                metrics["F"]["weight"]["mean"] += float(base_value["weight"])
+
+        elif sex == "M":
+            countmale["age"] += 1
+            countmale["height"] += 1
+            countmale["weight"] += 1
+            if base_value["age"] != "n/a":
+                metrics["M"]["age"]["mean"] += int(base_value["age"])
+            if base_value["height"] != "n/a":
+                metrics["M"]["height"]["mean"] += float(base_value["height"])
+            if base_value["weight"] != "n/a":
+                metrics["M"]["weight"]["mean"] += float(base_value["weight"])
+                
+    
+    if countfemale["age"] != 0:
+        metrics["F"]["age"]["mean"] = metrics["F"]["age"]["mean"] / countfemale["age"]
+    if countfemale["height"] != 0:
+        metrics["F"]["height"]["mean"] = metrics["F"]["height"]["mean"] / countfemale["height"]
+    if countfemale["weight"] != 0:
+        metrics["F"]["weight"]["mean"] = metrics["F"]["weight"]["mean"] / countfemale["weight"]
+    if countmale["age"] != 0:
+        metrics["M"]["age"]["mean"] = metrics["M"]["age"]["mean"] / countmale["age"]
+    if countmale["height"] != 0:
+        metrics["M"]["height"]["mean"] = metrics["M"]["height"]["mean"] / countmale["height"]
+    if countmale["weight"] != 0:
+        metrics["M"]["weight"]["mean"] = metrics["M"]["weight"]["mean"] / countmale["weight"]
+
+    fsumage = 0
+    fsumheight = 0
+    fsumweight = 0
+    msumage = 0
+    msumheight = 0
+    msumweight = 0
+
+    for participant_id, base_value in patients_dict.items():
+        sex = base_value["sex"]
+        age = base_value["age"]
+        height = base_value["height"]
+        weight = base_value["weight"]
+        if age != "n/a":
+            age = int(base_value["age"])
+        if height != "n/a":    
+            height = float(base_value["height"])
+        if weight != "n/a":
+            weight = float(base_value["weight"])
+        if sex == "F":
+            if age != "n/a":
+                fsumage += (age - float(metrics["F"]["age"]["mean"])) ** 2
+            if height != "n/a":
+                fsumheight += (height - float(metrics["F"]["height"]["mean"])) ** 2
+            if weight != "n/a":
+                fsumweight += (weight - float(metrics["F"]["weight"]["mean"])) ** 2
+        elif sex == "M":
+            if age != "n/a":
+                msumage += (age - float(metrics["M"]["age"]["mean"])) ** 2
+            if height != "n/a":
+                msumheight += (height - float(metrics["M"]["height"]["mean"])) ** 2
+            if weight != "n/a":
+                msumweight += (weight - float(metrics["M"]["weight"]["mean"])) ** 2
+
+
+    metrics["F"]["age"]["std"] = (1/countfemale["age"] * fsumage) ** 0.5
+    metrics["F"]["height"]["std"] = (1/countfemale["height"] * fsumheight) ** 0.5
+    metrics["F"]["weight"]["std"] = (1/countfemale["weight"] * fsumweight) ** 0.5
+    metrics["M"]["age"]["std"] = (1/countmale["age"] * msumage) ** 0.5
+    metrics["M"]["height"]["std"] = (1/countmale["height"] * msumheight) ** 0.5
+    metrics["M"]["weight"]["std"] = (1/countmale["weight"] * msumweight) ** 0.5
+    
+
+#    countage = 0
+#    countheight = 0
+#    countweight = 0
+
+#    for participant_id in patients_dict.keys():
+#        for key, value in patients_dict[participant_id].items():
+#            if patients_dict[participant_id]["sex"] == "F":
+#                metrics["F"] = {"age": {"mean": 0, "std": 0}, "height": {"mean": 0, "std": 0}, "weight": {"mean": 0, "std": 0}}
+#                for key1, value1 in patients_dict.items():
+#                        for key, value in patients_dict[participant_id].items():
+#                            if patients_dict[participant_id]["sex"] == "F":
+#                                if key == "age":
+#                                    countage += 1
+#                                    metrics["F"]["age"]["mean"] += int(value)
+#                                if key == "height":
+#                                    countheight += 1
+#                                    metrics["F"]["height"]["mean"] += int(value)
+#                                if key == "weight":
+#                                    countweight += 1
+#                                    metrics["F"]["weight"]["mean"] += int(value)
+#                metrics["F"]["age"]["mean"] = metrics["F"]["age"]["mean"] / countage
+#                metrics["F"]["height"]["mean"] = metrics["F"]["height"]["mean"] / countheight
+#                metrics["F"]["weight"]["mean"] = metrics["F"]["weight"]["mean"] / countweight
+
 
 
     # Fin du code
@@ -281,7 +396,7 @@ if __name__ == '__main__':
     ######################
 
     # Utilisation de la fonction
-    new_patients_dict = update_convention(patients_dict)
+    patients_dict = update_convention(patients_dict)
 
     # Affichage du résultat
     print("Partie 3: \n\n", patients_dict, "\n")
