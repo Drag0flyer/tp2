@@ -128,23 +128,25 @@ def update_convention(old_convention_dict):
 
     # TODO : Écrire votre code ici
 
+
+
+
     for participant_id in old_convention_dict.keys():
         new_convention_dict[participant_id] = {}
-        for date_of_scan, valeursscan in old_convention_dict[participant_id].items():
-            if valeursscan == "n/a":
-                valeursscan = None
+        for key, valeursscan in old_convention_dict[participant_id].items():
+            if key == "date_of_scan":
+                if valeursscan == "n/a":
+                    new_convention_dict[participant_id][key] = None
+                else:
+                    new_convention_dict[participant_id][key] = valeursscan.replace("-", "/")
+            else:
+                new_convention_dict[participant_id][key] = valeursscan
+                
             
 
+    print("000", new_convention_dict)
 
 
-#            new_convention_dict[participant_id][date_of_scan] = {}
-#            for key in old_convention_dict[participant_id][date_of_scan]:
-#                if old_convention_dict[participant_id][date_of_scan][key] == "n/a":
-#                    new_convention_dict[participant_id][date_of_scan][key] = None
-#                else:
-#                    new_convention_dict[participant_id][date_of_scan][key] = old_convention_dict[participant_id][date_of_scan][key]
-
-    #for participant_id in new_convention_dict.keys():
         
          
 
