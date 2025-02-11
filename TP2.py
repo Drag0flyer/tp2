@@ -130,13 +130,19 @@ def update_convention(old_convention_dict):
 
     for participant_id in old_convention_dict.keys():
         new_convention_dict[participant_id] = {}
-        for date_of_scan in old_convention_dict[participant_id].keys():
-            new_convention_dict[participant_id][date_of_scan] = {}
-            for key in old_convention_dict[participant_id][date_of_scan]:
-                if old_convention_dict[participant_id][date_of_scan][key] == "n/a":
-                    new_convention_dict[participant_id][date_of_scan][key] = None
-                else:
-                    new_convention_dict[participant_id][date_of_scan][key] = old_convention_dict[participant_id][date_of_scan][key]
+        for date_of_scan, valeursscan in old_convention_dict[participant_id].items():
+            if valeursscan == "n/a":
+                valeursscan = None
+            
+
+
+
+#            new_convention_dict[participant_id][date_of_scan] = {}
+#            for key in old_convention_dict[participant_id][date_of_scan]:
+#                if old_convention_dict[participant_id][date_of_scan][key] == "n/a":
+#                    new_convention_dict[participant_id][date_of_scan][key] = None
+#                else:
+#                    new_convention_dict[participant_id][date_of_scan][key] = old_convention_dict[participant_id][date_of_scan][key]
 
     #for participant_id in new_convention_dict.keys():
         
