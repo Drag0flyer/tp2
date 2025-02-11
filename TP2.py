@@ -301,32 +301,6 @@ def fetch_statistics(patients_dict):
     metrics["M"]["weight"]["std"] = (1/countmale["weight"] * msumweight) ** 0.5
     
 
-#    countage = 0
-#    countheight = 0
-#    countweight = 0
-
-#    for participant_id in patients_dict.keys():
-#        for key, value in patients_dict[participant_id].items():
-#            if patients_dict[participant_id]["sex"] == "F":
-#                metrics["F"] = {"age": {"mean": 0, "std": 0}, "height": {"mean": 0, "std": 0}, "weight": {"mean": 0, "std": 0}}
-#                for key1, value1 in patients_dict.items():
-#                        for key, value in patients_dict[participant_id].items():
-#                            if patients_dict[participant_id]["sex"] == "F":
-#                                if key == "age":
-#                                    countage += 1
-#                                    metrics["F"]["age"]["mean"] += int(value)
-#                                if key == "height":
-#                                    countheight += 1
-#                                    metrics["F"]["height"]["mean"] += int(value)
-#                                if key == "weight":
-#                                    countweight += 1
-#                                    metrics["F"]["weight"]["mean"] += int(value)
-#                metrics["F"]["age"]["mean"] = metrics["F"]["age"]["mean"] / countage
-#                metrics["F"]["height"]["mean"] = metrics["F"]["height"]["mean"] / countheight
-#                metrics["F"]["weight"]["mean"] = metrics["F"]["weight"]["mean"] / countweight
-
-
-
     # Fin du code
 
     return metrics
@@ -354,6 +328,19 @@ def create_csv(metrics):
 
     # TODO : Écrire votre code ici
 
+    with open("F_metrics.csv", 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(["stats","age","height","weight"])
+        writer.writerow(["mean", metrics["F"]["age"]["mean"], metrics["F"]["height"]["mean"], metrics["F"]["weight"]["mean"]])
+        writer.writerow(["std", metrics["F"]["age"]["std"], metrics["F"]["height"]["std"], metrics["F"]["weight"]["std"]])
+
+    with open("M_metrics.csv", 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(["stats","age","height","weight"])
+        writer.writerow(["mean", metrics["M"]["age"]["mean"], metrics["M"]["height"]["mean"], metrics["M"]["weight"]["mean"]])
+        writer.writerow(["std", metrics["M"]["age"]["std"], metrics["M"]["height"]["std"], metrics["M"]["weight"]["std"]])
+
+    paths_list = ["F_metrics.csv", "M_metrics.csv"]
 
     # Fin du code
 
